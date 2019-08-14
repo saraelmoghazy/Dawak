@@ -10,9 +10,8 @@ https://developer.android.com/guide/topics/ui/look-and-feel
 
 
 MDC
-
+https://material.io/develop/android/components/material-button/
 https://github.com/material-components/material-components-android 
-
 https://github.com/material-components/material-components-android/blob/master/catalog/java/io/material/catalog/draggable/DraggableCoordinatorLayout.java
 
 Design pattern
