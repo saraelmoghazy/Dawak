@@ -1,8 +1,10 @@
 package com.elmoghazy.dawak.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.elmoghazy.dawak.R;
-import com.elmoghazy.dawak.models.Drug;
+import com.elmoghazy.dawak.models.DrugsItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,25 +26,27 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG = "RecyclerViewAdpater";
-    private List<Drug> drugsList = new ArrayList<>();
+    private List<DrugsItem> drugsList = new ArrayList<>();
 //    private ArrayList<String> drugNames = new ArrayList<>();
 //    private ArrayList<String> drugImages = new ArrayList<>();
 
     private Context mContext;
-//old working constructor without MVVM
+
+    //old working constructor without MVVM
 //    public MyAdapter(Context mContext, ArrayList<String> drugsNames, ArrayList<String> drugImages){
 //        this.drugNames = drugsNames;
 //        this.drugImages = drugImages;
 //        this.mContext = mContext;
 //    }
-    public MyAdapter(Context mContext, List<Drug> drugsList){
+    public MyAdapter(Context mContext, List<DrugsItem> drugsList) {
         this.drugsList = drugsList;
         this.mContext = mContext;
     }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item,viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item, viewGroup, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
@@ -54,16 +58,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         myViewHolder.textView.setText(drugsList.get(position).getName());
         Glide.with(mContext)
                 .asBitmap()
-                .load(drugsList.get(position).getImageURL())
+                .load(drugsList.get(position).getUrl())
                 .into(myViewHolder.imageView);
         myViewHolder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"onClick");
-                Toast.makeText(mContext,"Hello " + drugsList.get(position).getName(),Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onClick");
+                Toast.makeText(mContext, "Hello " + drugsList.get(position).getName(), Toast.LENGTH_LONG).show();
 
             }
         });
+    }
+
+    public void updateList(List<DrugsItem> drugsItems) {
+        drugsList.clear();
+        drugsList.addAll(drugsItems);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -81,10 +91,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // each data item is just a string in this case
         public TextView textView;
         public ImageView imageView;
+
         public MyViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.drugName);
-            imageView = itemView.findViewById(R.id.drugImg);
+            textView = itemView.findViewById(R.id.textView);
+            imageView = itemView.findViewById(R.id.imageView);
         }
 
 //        public void bind(final String item, final OnItemClickListener listener){
