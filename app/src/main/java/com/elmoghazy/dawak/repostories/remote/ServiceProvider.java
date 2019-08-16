@@ -6,10 +6,10 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ServiceProvider {
-    public static Retrofit retrofit;
+class ServiceProvider {
+    static Retrofit retrofit;
 
-    public static Retrofit getRetrofit(String url) {
+    static Retrofit getRetrofit(String url) {
         if (retrofit == null) {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
             httpLoggingInterceptor = httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

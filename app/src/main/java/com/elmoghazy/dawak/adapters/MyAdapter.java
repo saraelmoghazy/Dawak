@@ -16,9 +16,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.elmoghazy.dawak.R;
 import com.elmoghazy.dawak.models.DrugsItem;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.resources.MaterialAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.subjects.BehaviorSubject;
 
 //interface OnItemClickListener {
 //    void onItemClick(String item);
@@ -31,16 +35,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 //    private ArrayList<String> drugImages = new ArrayList<>();
 
     private Context mContext;
-
+    private BehaviorSubject<String> nameSubject;
     //old working constructor without MVVM
 //    public MyAdapter(Context mContext, ArrayList<String> drugsNames, ArrayList<String> drugImages){
 //        this.drugNames = drugsNames;
 //        this.drugImages = drugImages;
 //        this.mContext = mContext;
 //    }
-    public MyAdapter(Context mContext, List<DrugsItem> drugsList) {
+    public MyAdapter(Context mContext, List<DrugsItem> drugsList, BehaviorSubject<String> nameSubject) {
         this.drugsList = drugsList;
         this.mContext = mContext;
+        this.nameSubject = nameSubject;
     }
 
     @NonNull
@@ -60,13 +65,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 .asBitmap()
                 .load(drugsList.get(position).getUrl())
                 .into(myViewHolder.imageView);
-        myViewHolder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick");
-                Toast.makeText(mContext, "Hello " + drugsList.get(position).getName(), Toast.LENGTH_LONG).show();
+        myViewHolder.itemView.setOnClickListener(view -> {
+            nameSubject.onNext(drugsList.get(position).getName());
 
-            }
         });
     }
 
