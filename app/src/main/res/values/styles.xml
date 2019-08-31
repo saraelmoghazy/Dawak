@@ -9,4 +9,14 @@
     <style name="TextDrugHeader" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/txt_xlarge</item>
     </style>
+
+    <style name="InputText" parent="Widget.AppCompat.TextView">
+        <item name="android:background">@color/colorSecondary</item>
+        <item name="android:paddingLeft">@dimen/xxsmall_margin</item>
+        <item name="android:paddingRight">@dimen/xxsmall_margin</item>
+        <item name="android:paddingTop">@dimen/xsmall_margin</item>
+        <item name="android:paddingBottom">@dimen/xsmall_margin</item>
+        <item name="android:textSize">@dimen/txt_xlarge</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+    </style>
 </resources>

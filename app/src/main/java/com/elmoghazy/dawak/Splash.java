@@ -8,16 +8,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 /**
  * Created by Sara Elmoghazy.
  */
-public class FragmentB extends Fragment {
+public class Splash extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_b, container, false);
+        View view = inflater.inflate(R.layout.splash_fragment, container, false);
+        view.findViewById(R.id.button).setOnClickListener(view1 -> Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_registerFragment));
+        return view;
     }
 }

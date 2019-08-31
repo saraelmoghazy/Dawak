@@ -11,8 +11,10 @@ public class RemoteDrugRepo implements IDrugRepo {
 
     @Override
     public Observable<DrugsResponse> getDrugs() {
+        //https://dawak.getsandbox.com/
+        //http://localhost:3333/api/
         return ServiceProvider
-                .getRetrofit("https://dawak.getsandbox.com/").create(ApiService.class).getDrugs()
+                .getRetrofit("http://192.168.216.2/api/").create(ApiService.class).getDrugs()
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }
