@@ -17,19 +17,29 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.elmoghazy.dawak.viewmodels.RegisterViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by Asmaa Hassan.
  */
 public class RegisterFragment extends Fragment {
     private RegisterViewModel registerViewModel;
-    private EditText phoneNumberEditText;
-//    private EditText codeEditText;
     private EditText usernameEditText;
-    private EditText passwordEditText;
+    private EditText phoneNumberEditText;
+    private EditText addressEditText;
+    private EditText codeEditText;
     private static final String TAG = "RegisterFragment";
-    private Button submitButton;
+    private FloatingActionButton submitButton;
+    Observable<Boolean> observable;
+
 
     @Nullable
     @Override
@@ -43,9 +53,55 @@ public class RegisterFragment extends Fragment {
         registerViewModel = ViewModelProviders.of(requireActivity()).get(RegisterViewModel.class);
         phoneNumberEditText = view.findViewById(R.id.phone_number);
         usernameEditText = view.findViewById(R.id.username);
-        passwordEditText = view.findViewById(R.id.password);
-        submitButton = view.findViewById(R.id.register_button);
-        final NavController navController = Navigation.findNavController(view);
+        addressEditText = view.findViewById(R.id.address);
+        submitButton = view.findViewById(R.id.confirm_button);
+        Observable<String> nameObservable = RxTextView.textChanges(usernameEditText).skip(1).map(new Function<CharSequence, String>() {
+            @Override
+            public String apply(CharSequence charSequence) throws Exception {
+                return charSequence.toString();
+            }
+        });
+        Observable<String> phoneNumberObservable = RxTextView.textChanges(phoneNumberEditText).skip(1).map(new Function<CharSequence, String>() {
+            @Override
+            public String apply(CharSequence charSequence) throws Exception {
+                return charSequence.toString();
+            }
+        });
+        Observable<String> addressObservable = RxTextView.textChanges(addressEditText).skip(1).map(new Function<CharSequence, String>() {
+            @Override
+            public String apply(CharSequence charSequence) throws Exception {
+                return charSequence.toString();
+            }
+        });
+
+
+        observable = Observable.combineLatest(nameObservable, phoneNumberObservable, addressObservable, new Function3<String, String, String, Boolean>() {
+            @Override
+            public Boolean apply(String s, String s2, String s3) throws Exception {
+                return isValidForm(s, s2, s3);
+
+            }
+        });
+
+        observable.subscribe(new DisposableObserver<Boolean>() {
+            @Override
+            public void onNext(Boolean aBoolean) {
+                updateButton(aBoolean);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+    final NavController navController = Navigation.findNavController(view);
         final View root = view;
         registerViewModel.authenticationState.observe(getViewLifecycleOwner(),authenticationState -> {
             switch (authenticationState) {
@@ -59,22 +115,46 @@ public class RegisterFragment extends Fragment {
                     break;
             }
         });
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        Log.d(TAG,"onBack presses");
-                        registerViewModel.refuseAuthentication();
-                        navController.popBackStack();
-                        Log.d(TAG,"after onBack presses");
-                    }
-                });
+//        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+//                new OnBackPressedCallback(true) {
+//                    @Override
+//                    public void handleOnBackPressed() {
+//                        Log.d(TAG,"onBack presses");
+//                        registerViewModel.refuseAuthentication();
+//                        navController.popBackStack();
+//                        Log.d(TAG,"after onBack presses");
+//                    }
+//                });
         submitButton.setOnClickListener(v ->
-                registerViewModel.authenticate(phoneNumberEditText.getText().toString(),usernameEditText.getText().toString(),passwordEditText.getText().toString()));
+                registerViewModel.authenticate(usernameEditText.getText().toString(),phoneNumberEditText.getText().toString(), addressEditText.getText().toString()));
     }
 
-    public void register(View view){
-        Log.d(TAG,"register method");
-        registerViewModel.authenticate(phoneNumberEditText.getText().toString(),usernameEditText.getText().toString(),passwordEditText.getText().toString());
+//    public void register(View view){
+//        Log.d(TAG,"register method");
+//        registerViewModel.authenticate(phoneNumberEditText.getText().toString(),usernameEditText.getText().toString(), addressEditText.getText().toString());
+//    }
+
+    public void updateButton(boolean valid) {
+        if (valid)
+            submitButton.setEnabled(true);
     }
+
+    public boolean isValidForm(String name, String phoneNumber, String address) {
+        boolean validName = !name.isEmpty();
+        if (!validName) {
+            usernameEditText.setError("Please enter valid name");
+        }
+        boolean validPhoneNumber = phoneNumber.length()>=11;
+        if (!validPhoneNumber) {]
+
+            phoneNumberEditText.setError("Incorrect phone number");
+        }
+        boolean validAddress = !address.isEmpty();
+        if (!validAddress) {
+            addressEditText.setError("Please enter valid valid address");
+        }
+        return validName && validPhoneNumber && validAddress;
+    }
+
+
 }

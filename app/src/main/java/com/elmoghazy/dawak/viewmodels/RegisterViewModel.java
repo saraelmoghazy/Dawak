@@ -26,11 +26,11 @@ public class RegisterViewModel extends ViewModel {
         phomeNumber = null;
     }
 
-    public void authenticate(String phoneNumber, String username, String password) {
-        if (validate(phoneNumber, username, password)) {
+    public void authenticate(String username, String phoneNumber, String address) {
+//        if (validate(phoneNumber, username, password)) {
             this.phomeNumber = phoneNumber;
             authenticationState.setValue(AuthenticationState.AUTHENTICATED);
-            this.clientServices.registerClient(username.trim(), phoneNumber.trim(), password.trim())
+            this.clientServices.registerClient(username.trim(), phoneNumber.trim(), address.trim())
                     .subscribe(new Observer<RegisterResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
@@ -69,10 +69,10 @@ public class RegisterViewModel extends ViewModel {
 //                    authenticationState.setValue(AuthenticationState.INVALID_AUTHENTICATION);
 //                }
 //            });
-        }
-        else{
-            authenticationState.setValue(AuthenticationState.INVALID_AUTHENTICATION);
-        }
+//        }
+//        else{
+//            authenticationState.setValue(AuthenticationState.INVALID_AUTHENTICATION);
+//        }
 
     }
 
@@ -81,9 +81,9 @@ public class RegisterViewModel extends ViewModel {
         authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
     }
 
-    private boolean validate(String phoneNumber, String username, String password) {
-        if(phoneNumber.length()<11|| username.length()<4 || password.length() < 7)
-            return false;
-        return true;
-    }
+//    private boolean validate(String phoneNumber, String username, String password) {
+//        if(phoneNumber.length()<11|| username.length()<4 || password.length() < 7)
+//            return false;
+//        return true;
+//    }
 }
