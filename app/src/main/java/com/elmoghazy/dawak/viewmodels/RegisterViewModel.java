@@ -20,44 +20,48 @@ public class RegisterViewModel extends ViewModel {
         INVALID_AUTHENTICATION  // Authentication failed
     }
     final public MutableLiveData<AuthenticationState> authenticationState =  new MutableLiveData<>();
+//    public String username;
+    final public MutableLiveData<String> usernameLiveData = new MutableLiveData<>();
     String phomeNumber;
+
+    public void setUsername(String username){
+        this.usernameLiveData.setValue(username);
+    }
     public RegisterViewModel(){
         authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
         phomeNumber = null;
     }
 
     public void authenticate(String username, String phoneNumber, String address) {
-//        if (validate(phoneNumber, username, password)) {
-            this.phomeNumber = phoneNumber;
-            authenticationState.setValue(AuthenticationState.AUTHENTICATED);
-            this.clientServices.registerClient(username.trim(), phoneNumber.trim(), address.trim())
-                    .subscribe(new Observer<RegisterResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            Log.d(TAG,"on subscribe");
-                            Log.d(TAG,d.toString());
+        this.phomeNumber = phoneNumber;
+        authenticationState.setValue(AuthenticationState.AUTHENTICATED);
+        this.clientServices.registerClient(username.trim(), phoneNumber.trim(), address.trim())
+                .subscribe(new Observer<RegisterResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG,"on subscribe");
+                        Log.d(TAG,d.toString());
 //                            isLoading.setValue(true);
-                        }
-                        @Override
-                        public void onNext(RegisterResponse registerResponse) {
-                         Log.d(TAG,"donee");
-                         Log.d(TAG,registerResponse.getUsername());
-                        }
+                    }
+                    @Override
+                    public void onNext(RegisterResponse registerResponse) {
+                     Log.d(TAG,"donee");
+                     Log.d(TAG,registerResponse.getUsername());
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.d(TAG,"On error retrofit");
-//                Log.d(TAG,e.printStackTrace());
-                            e.printStackTrace();
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG,"On error retrofit");
+                        e.printStackTrace();
 //                            getErrorMessage().setValue(e.getMessage());
 //                            isLoading.setValue(false);
-                        }
+                    }
 
-                        @Override
-                        public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-                        }
-                    });
+                    }
+                });
 //                    response -> {
 //                if (response.getUsername()=="") {
 //                    Log.d(TAG,"username is empty");

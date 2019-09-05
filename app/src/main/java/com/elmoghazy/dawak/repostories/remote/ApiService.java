@@ -17,7 +17,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("register")
-    Observable<RegisterResponse> registerClient(@Field("phoneNumber") String phoneNumber,
-                                                @Field("username") String username,
-                                                @Field("password") String password);
+    Observable<RegisterResponse> registerClient(@Field("username") String username,
+                                                @Field("phoneNumber") String phoneNumber,
+                                                @Field("address") String address);
 }

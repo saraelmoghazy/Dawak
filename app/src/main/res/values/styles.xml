@@ -16,7 +16,7 @@
         <item name="android:paddingRight">@dimen/xxsmall_margin</item>
         <item name="android:paddingTop">@dimen/xsmall_margin</item>
         <item name="android:paddingBottom">@dimen/xsmall_margin</item>
-        <item name="android:textSize">@dimen/txt_xlarge</item>
+        <item name="android:textSize">@dimen/txt_xxlarge</item>
         <item name="android:textColorHint">@color/colorPrimary</item>
     </style>
 </resources>

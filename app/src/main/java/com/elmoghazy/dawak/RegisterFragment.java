@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ public class RegisterFragment extends Fragment {
     private EditText addressEditText;
     private EditText codeEditText;
     private static final String TAG = "RegisterFragment";
-    private FloatingActionButton submitButton;
+    private ImageButton submitButton;
     Observable<Boolean> observable;
 
 
@@ -54,7 +55,9 @@ public class RegisterFragment extends Fragment {
         phoneNumberEditText = view.findViewById(R.id.phone_number);
         usernameEditText = view.findViewById(R.id.username);
         addressEditText = view.findViewById(R.id.address);
+        codeEditText = view.findViewById(R.id.verification_code);
         submitButton = view.findViewById(R.id.confirm_button);
+        submitButton.setEnabled(false);
         Observable<String> nameObservable = RxTextView.textChanges(usernameEditText).skip(1).map(new Function<CharSequence, String>() {
             @Override
             public String apply(CharSequence charSequence) throws Exception {
@@ -73,6 +76,13 @@ public class RegisterFragment extends Fragment {
                 return charSequence.toString();
             }
         });
+        Observable<String> codeObservable = RxTextView.textChanges(codeEditText).skip(1).map(new Function<CharSequence, String>() {
+            @Override
+            public String apply(CharSequence charSequence) throws Exception {
+                return charSequence.toString();
+            }
+        });
+
 
 
         observable = Observable.combineLatest(nameObservable, phoneNumberObservable, addressObservable, new Function3<String, String, String, Boolean>() {
@@ -125,8 +135,19 @@ public class RegisterFragment extends Fragment {
 //                        Log.d(TAG,"after onBack presses");
 //                    }
 //                });
-        submitButton.setOnClickListener(v ->
-                registerViewModel.authenticate(usernameEditText.getText().toString(),phoneNumberEditText.getText().toString(), addressEditText.getText().toString()));
+
+        submitButton.setOnClickListener(v ->{
+//            submitButton.setVisibility(View.INVISIBLE);
+//            submitButton.setMaxWidth(0);
+//            submitButton.setMaxHeight(0);
+            submitButton.setVisibility(View.GONE);
+            codeEditText.setVisibility(View.VISIBLE);
+            usernameEditText.setEnabled(false);
+            addressEditText.setEnabled(false);
+            phoneNumberEditText.setEnabled(false);
+        });
+        codeObservable.subscribe(s -> checkCode(s,navController));
+        //registerViewModel.authenticate(usernameEditText.getText().toString(),phoneNumberEditText.getText().toString(), addressEditText.getText().toString())
     }
 
 //    public void register(View view){
@@ -137,6 +158,7 @@ public class RegisterFragment extends Fragment {
     public void updateButton(boolean valid) {
         if (valid)
             submitButton.setEnabled(true);
+        else submitButton.setEnabled(false);
     }
 
     public boolean isValidForm(String name, String phoneNumber, String address) {
@@ -145,8 +167,7 @@ public class RegisterFragment extends Fragment {
             usernameEditText.setError("Please enter valid name");
         }
         boolean validPhoneNumber = phoneNumber.length()>=11;
-        if (!validPhoneNumber) {]
-
+        if (!validPhoneNumber) {
             phoneNumberEditText.setError("Incorrect phone number");
         }
         boolean validAddress = !address.isEmpty();
@@ -156,5 +177,12 @@ public class RegisterFragment extends Fragment {
         return validName && validPhoneNumber && validAddress;
     }
 
+    public void checkCode(String code,NavController navController){
+        if(code.length()== 4)
+        {
+            registerViewModel.setUsername(usernameEditText.getText().toString());
+            navController.navigate(R.id.action_registerFragment_to_homeFragment);
+        }
+    }
 
 }

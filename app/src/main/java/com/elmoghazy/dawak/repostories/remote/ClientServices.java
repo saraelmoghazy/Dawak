@@ -8,9 +8,9 @@ import retrofit2.Response;
 //import okhttp3.Response;
 
 public class ClientServices {
-    public Observable<RegisterResponse> registerClient(String phoneNumber, String username, String password){
+    public Observable<RegisterResponse> registerClient(String username, String phoneNumber, String address){
         return ServiceProvider.getRetrofit("http://localhost:3333/api/").create(ApiService.class)
-                .registerClient(phoneNumber,username,password)
+                .registerClient(username,phoneNumber,address)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }
